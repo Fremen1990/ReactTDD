@@ -1,4 +1,9 @@
-import { render, screen } from "@testing-library/react";
+import {
+  render,
+  screen,
+  waitFor,
+  waitForElementToBeRemoved,
+} from "@testing-library/react";
 import SignUpPage from "./SignUpPage";
 import userEvent from "@testing-library/user-event";
 import axios from "axios";
@@ -55,6 +60,24 @@ describe("Sing Up Page", () => {
   });
 
   describe("Interactions", () => {
+    let requestBody;
+    let counter = 0;
+    const server = setupServer(
+      rest.post("/api/1.0/users", async (req, res, ctx) => {
+        requestBody = await req.json();
+        counter++;
+        return res(ctx.status(200));
+      })
+    );
+
+    beforeEach(() => {
+      counter = 0;
+    });
+
+    beforeAll(() => server.listen());
+
+    afterAll(() => server.close());
+
     let button;
 
     const setup = () => {
@@ -104,57 +127,53 @@ describe("Sing Up Page", () => {
     });
 
     it("(MSW MOCK) sends username, email and password to backend after clicking the button", async () => {
-      let requestBody;
-      const server = setupServer(
-        rest.post("/api/1.0/users", async (req, res, ctx) => {
-          requestBody = await req.json();
-          return res(ctx.status(200));
-        })
-      );
-      server.listen();
       setup();
       userEvent.click(button);
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await screen.findByText(
+        "Please check your e-mail to activate your account"
+      );
       expect(requestBody).toEqual({
         username: "user1",
         email: "user1@email.com",
         password: "Password1234",
       });
-      server.close();
     });
 
     it("(MSW MOCK) disables button when there is an ongoing api call", async () => {
-      let counter = 0;
-      const server = setupServer(
-        rest.post("/api/1.0/users", async (req, res, ctx) => {
-          counter++;
-          return res(ctx.status(200));
-        })
-      );
-      server.listen();
       setup();
       userEvent.click(button);
       userEvent.click(button);
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await screen.findByText(
+        "Please check your e-mail to activate your account"
+      );
       expect(counter).toBe(1);
-      server.close();
     });
 
     it("(MSW MOCK) displays spinner after clicking submit", async () => {
-      let counter = 0;
-      const server = setupServer(
-        rest.post("/api/1.0/users", async (req, res, ctx) => {
-          counter++;
-          return res(ctx.status(200));
-        })
-      );
-      server.listen();
       setup();
-      await expect(screen.queryByRole("status")).not.toBeInTheDocument();
-      await userEvent.click(button);
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+      userEvent.click(button);
       const spinner = screen.getByRole("status");
-      await expect(spinner).toBeInTheDocument();
-      server.close();
+      expect(spinner).toBeInTheDocument();
+      await screen.findByText(
+        "Please check your e-mail to activate your account"
+      );
+    });
+
+    it("(MSW MOCK) displays account activation notification after successful sign up request", async () => {
+      setup();
+      const message = "Please check your e-mail to activate your account";
+      expect(screen.queryByText(message)).not.toBeInTheDocument();
+      userEvent.click(button);
+      const text = await screen.findByText(message);
+      expect(text).toBeInTheDocument();
+    });
+
+    it("hides sign up form after succesful sign up request", async () => {
+      setup();
+      const form = screen.getByTestId("form-sign-up");
+      userEvent.click(button);
+      await waitForElementToBeRemoved(form);
     });
   });
 });
