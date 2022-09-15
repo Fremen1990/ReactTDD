@@ -1,4 +1,5 @@
 import React from "react";
+import axios from "axios";
 
 //=== FUNCTIONAL COMPONENT ====
 // const SignUpPage = ()=>{
@@ -14,18 +15,32 @@ class SignUpPage extends React.Component {
     passwordRepeat: "",
   };
 
-  onChangePassword = (event) => {
-    const currentValue = event.target.value;
+  onChange = (event) => {
+    const { id, value } = event.target;
     this.setState({
-      password: currentValue,
+      [id]: value,
     });
   };
 
-  onChangePasswordRepeat = (event) => {
-    const currentValue = event.target.value;
-    this.setState({
-      passwordRepeat: currentValue,
-    });
+  submit = (event) => {
+    event.preventDefault();
+    const { username, email, password } = this.state;
+    const body = {
+      username,
+      email,
+      password,
+    };
+    //============== FETCH ==============
+    // fetch("/api/1.0/users", {
+    //   method: "POST",
+    //   header: {
+    //     "Content-Type": "application/json",
+    //   },
+    //   body: JSON.stringify(body),
+    // });
+
+    //============= AXIOS ==============
+    axios.post("/api/1.0/users", body);
   };
 
   render() {
@@ -36,33 +51,39 @@ class SignUpPage extends React.Component {
     }
     return (
       <div>
-        <h1>Sign Up</h1>
-        <label htmlFor="username">Username</label>
-        <input
-          id="username"
-          // placeholder="username"
-        />
-        <label htmlFor="email">E-mail</label>
-        <input
-          id="email"
-          type="email"
-          // placeholder="email"
-        />
-        <label htmlFor="password">Password</label>
-        <input
-          id="password"
-          type="password"
-          onChange={this.onChangePassword}
-          // placeholder="email"
-        />
-        <label htmlFor="passwordRepeat">Password Repeat</label>
-        <input
-          id="passwordRepeat"
-          type="password"
-          onChange={this.onChangePasswordRepeat}
-          // placeholder="email"
-        />
-        <button disabled={disabled}>Sign Up</button>
+        <form>
+          <h1>Sign Up</h1>
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            onChange={this.onChange}
+            // placeholder="username"
+          />
+          <label htmlFor="email">E-mail</label>
+          <input
+            id="email"
+            type="email"
+            onChange={this.onChange}
+            // placeholder="email"
+          />
+          <label htmlFor="password">Password</label>
+          <input
+            id="password"
+            type="password"
+            onChange={this.onChange}
+            // placeholder="email"
+          />
+          <label htmlFor="passwordRepeat">Password Repeat</label>
+          <input
+            id="passwordRepeat"
+            type="password"
+            onChange={this.onChange}
+            // placeholder="email"
+          />
+          <button onClick={this.submit} disabled={disabled}>
+            Sign Up
+          </button>
+        </form>
       </div>
     );
   }
