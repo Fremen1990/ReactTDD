@@ -50,7 +50,7 @@ class SignUpPage extends React.Component {
         this.setState({ signUpSuccess: true });
       });
     } catch (err) {
-      console.log(error);
+      console.log(err);
     }
   };
 
