@@ -29,10 +29,6 @@ describe("Sing Up Page", () => {
       const input = screen.getByLabelText("E-mail");
       expect(input).toBeInTheDocument();
     });
-    it("has email type for email input", () => {
-      const input = screen.getByLabelText("E-mail");
-      expect(input.type).toBe("email");
-    });
     it("has password input", () => {
       const input = screen.getByLabelText("Password");
       expect(input).toBeInTheDocument();
@@ -79,14 +75,14 @@ describe("Sing Up Page", () => {
 
     afterAll(() => server.close());
 
-    let button;
+    let button, usernameInput, emailInput, passwordInput, passwordRepeatInput;
 
     const setup = () => {
       render(<SignUpPage />);
-      const usernameInput = screen.getByLabelText("Username");
-      const emailInput = screen.getByLabelText("E-mail");
-      const passwordInput = screen.getByLabelText("Password");
-      const passwordRepeatInput = screen.getByLabelText("Password Repeat");
+      usernameInput = screen.getByLabelText("Username");
+      emailInput = screen.getByLabelText("E-mail");
+      passwordInput = screen.getByLabelText("Password");
+      passwordRepeatInput = screen.getByLabelText("Password Repeat");
       userEvent.type(usernameInput, "user1");
       userEvent.type(emailInput, "user1@email.com");
       userEvent.type(passwordInput, "Password1234");
@@ -196,25 +192,85 @@ describe("Sing Up Page", () => {
       expect(validationError).toBeInTheDocument();
     });
 
+    const generateValidationError = (field, message) => {
+      return rest.post("/api/1.0/users", async (req, res, ctx) => {
+        return res(
+          ctx.status(400),
+          ctx.json({
+            validationErrors: { [field]: message },
+          })
+        );
+      });
+    };
+
+    it.each`
+      field         | message
+      ${"username"} | ${"Username cannot be null"}
+      ${"email"}    | ${"E-mail cannot be null"}
+      ${"password"} | ${"Password cannot be null"}
+    `(
+      "displays message: '$message' for field: '$field'",
+      async ({ field, message }) => {
+        server.use(generateValidationError(field, message));
+        setup();
+        userEvent.click(button);
+        const validationError = await screen.findByText(message);
+        expect(validationError).toBeInTheDocument();
+      }
+    );
+
     it("hides spinner and enables button after response received", async () => {
+      const testField = "username";
+      const testFieldMessage = "Username cannot be null";
+      server.use(generateValidationError(testField, testFieldMessage));
+      setup();
+      userEvent.click(button);
+      const validationError = await screen.findByText(testFieldMessage);
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+      expect(validationError).toBeInTheDocument();
+      expect(button).toBeEnabled();
+    });
+
+    it("displays mismatch message for password repeat input", () => {
+      setup();
+      userEvent.type(passwordInput, "Password1234");
+      userEvent.type(passwordRepeatInput, "Password1234notMatch");
+      const validationError = screen.queryByText("Password mismatch");
+      expect(validationError).toBeInTheDocument();
+    });
+
+    it("clears validation error after username field is updated", async () => {
       server.use(
-        rest.post("/api/1.0/users", async (req, res, ctx) => {
-          return res(
-            ctx.status(400),
-            ctx.json({
-              validationErrors: { username: "Username cannot be null" },
-            })
-          );
-        })
+        generateValidationError("username", "Username cannot be null")
       );
       setup();
       userEvent.click(button);
       const validationError = await screen.findByText(
         "Username cannot be null"
       );
-      expect(screen.queryByRole("status")).not.toBeInTheDocument();
-      expect(validationError).toBeInTheDocument();
-      expect(button).toBeEnabled();
+      userEvent.type(usernameInput, "user1-updated");
+      expect(validationError).not.toBeInTheDocument();
+      // expect(
+      //   screen.queryByText("Username cannot be null")
+      // ).not.toBeInTheDocument();
     });
+
+    it.each`
+      field         | message                      | label
+      ${"username"} | ${"Username cannot be null"} | ${"Username"}
+      ${"email"}    | ${"E-mail cannot be null"}   | ${"E-mail"}
+      ${"password"} | ${"Password cannot be null"} | ${"Password"}
+    `(
+      "clears validation error after field: '$field' is updated",
+      async ({ field, message, label }) => {
+        server.use(generateValidationError(field, message));
+        setup();
+        userEvent.click(button);
+        const validationError = await screen.findByText(message);
+        const inputLabel = await screen.getByLabelText(label);
+        userEvent.type(inputLabel, "updated-input");
+        expect(validationError).not.toBeInTheDocument();
+      }
+    );
   });
 });

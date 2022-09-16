@@ -23,8 +23,12 @@ class SignUpPage extends React.Component {
 
   onChange = (event) => {
     const { id, value } = event.target;
+    // const errorsCopy = JSON.parse(JSON.stringify(this.state.errors)); DEEP COPY
+    const errorsCopy = { ...this.state.errors };
+    delete errorsCopy[id];
     this.setState({
       [id]: value,
+      errors: errorsCopy,
     });
   };
 
@@ -66,6 +70,9 @@ class SignUpPage extends React.Component {
     if (password && passwordRepeat) {
       disabled = password !== passwordRepeat;
     }
+
+    let passwordMismatch =
+      password !== passwordRepeat ? "Password mismatch" : "";
     return (
       <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
         {!signUpSuccess && (
@@ -81,42 +88,29 @@ class SignUpPage extends React.Component {
                 help={errors.username}
               />
 
-              <div className="mb-3">
-                <label className="form-label" htmlFor="email">
-                  E-mail
-                </label>
-                <input
-                  className="form-control"
-                  id="email"
-                  type="email"
-                  onChange={this.onChange}
-                  // placeholder="email"
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label" htmlFor="password">
-                  Password
-                </label>
-                <input
-                  className="form-control"
-                  id="password"
-                  type="password"
-                  onChange={this.onChange}
-                  // placeholder="email"
-                />
-              </div>
-              <div className="mb-3">
-                <label className="form-label" htmlFor="passwordRepeat">
-                  Password Repeat
-                </label>
-                <input
-                  className="form-control"
-                  id="passwordRepeat"
-                  type="password"
-                  onChange={this.onChange}
-                  // placeholder="email"
-                />
-              </div>
+              <Input
+                id="email"
+                label="E-mail"
+                onChange={this.onChange}
+                help={errors.email}
+              />
+
+              <Input
+                id="password"
+                label="Password"
+                type="password"
+                onChange={this.onChange}
+                help={errors.password}
+              />
+
+              <Input
+                id="passwordRepeat"
+                label="Password Repeat"
+                type="password"
+                onChange={this.onChange}
+                help={passwordMismatch}
+              />
+
               <div className="text-center">
                 <button
                   className="btn btn-primary"
