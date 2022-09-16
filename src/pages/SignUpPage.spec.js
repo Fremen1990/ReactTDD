@@ -194,5 +194,26 @@ describe("Sing Up Page", () => {
       );
       expect(validationError).toBeInTheDocument();
     });
+
+    it("hides spinner and enables button after response received", async () => {
+      server.use(
+        rest.post("/api/1.0/users", async (req, res, ctx) => {
+          return res(
+            ctx.status(400),
+            ctx.json({
+              validationErrors: { username: "Username cannot be null" },
+            })
+          );
+        })
+      );
+      setup();
+      userEvent.click(button);
+      const validationError = await screen.findByText(
+        "Username cannot be null"
+      );
+      expect(screen.queryByRole("status")).not.toBeInTheDocument();
+      expect(validationError).toBeInTheDocument();
+      expect(button).toBeEnabled();
+    });
   });
 });
