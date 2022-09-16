@@ -1,5 +1,6 @@
 import React from "react";
 import axios from "axios";
+import Input from "../assets/components/Input";
 
 //=== FUNCTIONAL COMPONENT ====
 // const SignUpPage = ()=>{
@@ -72,20 +73,14 @@ class SignUpPage extends React.Component {
             <div className="card-header">
               <h1 className="text-center">Sign Up</h1>
             </div>
-
             <div className="card-body">
-              <div className="mb-3">
-                <label className="form-label" htmlFor="username">
-                  Username
-                </label>
-                <input
-                  className="form-control"
-                  id="username"
-                  onChange={this.onChange}
-                  // placeholder="username"
-                />
-                {errors.username && <span>{errors.username}</span>}
-              </div>
+              <Input
+                id="username"
+                label="Username"
+                onChange={this.onChange}
+                help={errors.username}
+              />
+
               <div className="mb-3">
                 <label className="form-label" htmlFor="email">
                   E-mail

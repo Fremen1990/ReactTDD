@@ -72,6 +72,7 @@ describe("Sing Up Page", () => {
 
     beforeEach(() => {
       counter = 0;
+      server.resetHandlers();
     });
 
     beforeAll(() => server.listen());
@@ -169,7 +170,7 @@ describe("Sing Up Page", () => {
       expect(text).toBeInTheDocument();
     });
 
-    it("hides sign up form after succesful sign up request", async () => {
+    it("hides sign up form after successful sign up request", async () => {
       setup();
       const form = screen.getByTestId("form-sign-up");
       userEvent.click(button);
