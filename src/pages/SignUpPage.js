@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "axios";
 import Input from "../assets/components/Input";
-import { withTranslation} from "react-i18next"
+import { withTranslation } from "react-i18next";
 
 //=== FUNCTIONAL COMPONENT ====
 // const SignUpPage = ()=>{
@@ -80,26 +80,26 @@ class SignUpPage extends React.Component {
         {!signUpSuccess && (
           <form className="card mt-5" data-testid="form-sign-up">
             <div className="card-header">
-              <h1 className="text-center">{t('signUp')}</h1>
+              <h1 className="text-center">{t("signUp")}</h1>
             </div>
             <div className="card-body">
               <Input
                 id="username"
-                label={t('username')}
+                label={t("username")}
                 onChange={this.onChange}
                 help={errors.username}
               />
 
               <Input
                 id="email"
-                label={t('email')}
+                label={t("email")}
                 onChange={this.onChange}
                 help={errors.email}
               />
 
               <Input
                 id="password"
-                label={t('password')}
+                label={t("password")}
                 type="password"
                 onChange={this.onChange}
                 help={errors.password}
@@ -107,7 +107,7 @@ class SignUpPage extends React.Component {
 
               <Input
                 id="passwordRepeat"
-                label={t('passwordRepeat')}
+                label={t("passwordRepeat")}
                 type="password"
                 onChange={this.onChange}
                 help={passwordMismatch}
@@ -125,7 +125,7 @@ class SignUpPage extends React.Component {
                       role="status"
                     />
                   ) : null}
-                  {t('signUp')}
+                  {t("signUp")}
                 </button>
               </div>
             </div>
@@ -136,11 +136,25 @@ class SignUpPage extends React.Component {
             Please check your e-mail to activate your account
           </div>
         )}
+        <span
+          className="m-2"
+          title="Polish"
+          onClick={() => this.props.i18n.changeLanguage("pl")}
+        >
+          PL
+        </span>
+        <span
+          className="m-2"
+          title="English"
+          onClick={() => this.props.i18n.changeLanguage("en")}
+        >
+          EN
+        </span>
       </div>
     );
   }
 }
 
-const SignUpPageWithTranslation = withTranslation()(SignUpPage)
+const SignUpPageWithTranslation = withTranslation()(SignUpPage);
 
 export default SignUpPageWithTranslation;
