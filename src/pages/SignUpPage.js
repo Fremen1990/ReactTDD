@@ -1,6 +1,7 @@
 import React from "react";
 import axios from "axios";
 import Input from "../assets/components/Input";
+import { withTranslation} from "react-i18next"
 
 //=== FUNCTIONAL COMPONENT ====
 // const SignUpPage = ()=>{
@@ -64,6 +65,7 @@ class SignUpPage extends React.Component {
   };
 
   render() {
+    const { t } = this.props;
     let disabled = true;
     const { password, passwordRepeat, apiProgress, signUpSuccess, errors } =
       this.state;
@@ -78,26 +80,26 @@ class SignUpPage extends React.Component {
         {!signUpSuccess && (
           <form className="card mt-5" data-testid="form-sign-up">
             <div className="card-header">
-              <h1 className="text-center">Sign Up</h1>
+              <h1 className="text-center">{t('signUp')}</h1>
             </div>
             <div className="card-body">
               <Input
                 id="username"
-                label="Username"
+                label={t('username')}
                 onChange={this.onChange}
                 help={errors.username}
               />
 
               <Input
                 id="email"
-                label="E-mail"
+                label={t('email')}
                 onChange={this.onChange}
                 help={errors.email}
               />
 
               <Input
                 id="password"
-                label="Password"
+                label={t('password')}
                 type="password"
                 onChange={this.onChange}
                 help={errors.password}
@@ -105,7 +107,7 @@ class SignUpPage extends React.Component {
 
               <Input
                 id="passwordRepeat"
-                label="Password Repeat"
+                label={t('passwordRepeat')}
                 type="password"
                 onChange={this.onChange}
                 help={passwordMismatch}
@@ -123,7 +125,7 @@ class SignUpPage extends React.Component {
                       role="status"
                     />
                   ) : null}
-                  Sign Up
+                  {t('signUp')}
                 </button>
               </div>
             </div>
@@ -139,4 +141,6 @@ class SignUpPage extends React.Component {
   }
 }
 
-export default SignUpPage;
+const SignUpPageWithTranslation = withTranslation()(SignUpPage)
+
+export default SignUpPageWithTranslation;
