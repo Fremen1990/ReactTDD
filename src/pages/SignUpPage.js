@@ -2,6 +2,7 @@ import React from "react";
 import axios from "axios";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
+import { signup } from "../api/apiCalls";
 
 //=== FUNCTIONAL COMPONENT ====
 // const SignUpPage = ()=>{
@@ -51,17 +52,10 @@ class SignUpPage extends React.Component {
     // });
 
     //============= AXIOS ==============
+    this.setState({ apiProgress: true });
     try {
-      this.setState({ apiProgress: true });
-      await axios
-        .post("/api/1.0/users", body, {
-          headers: {
-            "Accept-Language": this.props.i18n.language,
-          },
-        })
-        .then(() => {
-          this.setState({ signUpSuccess: true });
-        });
+      await signup(body);
+      this.setState({ signUpSuccess: true });
     } catch (error) {
       if (error.response.status === 400) {
         this.setState({ errors: error.response.data.validationErrors });
