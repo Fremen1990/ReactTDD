@@ -5,6 +5,7 @@ import LoginPage from "./pages/LoginPage";
 import UserPage from "./pages/UserPage";
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import logo from "./assets/hoaxify.png";
 
 function App() {
   const { t } = useTranslation();
@@ -13,35 +14,48 @@ function App() {
 
   const onClickLink = (event) => {
     event.preventDefault();
-    const path = event.target.attributes.href.value;
+    const path = event.currentTarget.attributes.href.value;
     window.history.pushState({}, "", path);
     setPath(path);
   };
 
   return (
-    <div className="container">
-      <div>
-        <a href="/" title="Home" onClick={onClickLink}>
-          Hoaxify
-        </a>
-        <a href="/signup" onClick={onClickLink}>
-          {t("signUp")}
-        </a>
-        <a href="/login" onClick={onClickLink}>
-          Login
-        </a>
+    <>
+      <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
+        <div className="container">
+          <a
+            className="navbar-brand"
+            href="/"
+            title="Home"
+            onClick={onClickLink}
+          >
+            <img src={logo} alt="Hoaxify" width="60" />
+            Hoaxify
+          </a>
+          <ul className="navbar-nav">
+            <a className="nav-link" href="/signup" onClick={onClickLink}>
+              {t("signUp")}
+            </a>
+            <a className="nav-link" href="/login" onClick={onClickLink}>
+              Login
+            </a>
+          </ul>
+        </div>
+      </nav>
+
+      <div className="container">
+        {/*// Old JS routing*/}
+        {/*{window.location.pathname === "/" && <HomePage />}*/}
+        {/*{window.location.pathname === "/signup" && <SignUpPage />}*/}
+        {/*{window.location.pathname === "/login" && <LoginPage />}*/}
+        {/*{window.location.pathname.startsWith("/user/") && <UserPage />}*/}
+        {path === "/" && <HomePage />}
+        {path === "/signup" && <SignUpPage />}
+        {path === "/login" && <LoginPage />}
+        {path.startsWith("/user/") && <UserPage />}
+        <LanguageSelector />
       </div>
-      {/*// Old JS routing*/}
-      {/*{window.location.pathname === "/" && <HomePage />}*/}
-      {/*{window.location.pathname === "/signup" && <SignUpPage />}*/}
-      {/*{window.location.pathname === "/login" && <LoginPage />}*/}
-      {/*{window.location.pathname.startsWith("/user/") && <UserPage />}*/}
-      {path === "/" && <HomePage />}
-      {path === "/signup" && <SignUpPage />}
-      {path === "/login" && <LoginPage />}
-      {path.startsWith("/user/") && <UserPage />}
-      <LanguageSelector />
-    </div>
+    </>
   );
 }
 
