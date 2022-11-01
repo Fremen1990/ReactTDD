@@ -3,5 +3,6 @@
   "username": "Użytkownik",
   "email":"Adres Email",
   "password":"Hasło",
-  "passwordRepeat":"Powtórz Hasło"
+  "passwordRepeat":"Powtórz Hasło",
+  "passwordMismatchValidation": "Hasła się różnią"
 }

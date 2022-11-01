@@ -74,7 +74,7 @@ class SignUpPage extends React.Component {
     }
 
     let passwordMismatch =
-      password !== passwordRepeat ? "Password mismatch" : "";
+      password !== passwordRepeat ? t("passwordMismatchValidation") : "";
     return (
       <div className="col-lg-6 offset-lg-3 col-md-8 offset-md-2">
         {!signUpSuccess && (

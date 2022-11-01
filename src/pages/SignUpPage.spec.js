@@ -279,12 +279,17 @@ describe("Sing Up Page", () => {
   });
 
   describe("Internationalization", () => {
+    let polishToggle, englishToggle;
+
     const setup = () => {
       render(
         <>
           <SignUpPage /> <LanguageSelector />
         </>
       );
+
+      polishToggle = screen.getByTitle("Polish");
+      englishToggle = screen.getByTitle("English");
     };
 
     afterEach(() => {
@@ -309,8 +314,6 @@ describe("Sing Up Page", () => {
 
     it("displays all text in Polish after changing the language", () => {
       setup();
-
-      const polishToggle = screen.getByTitle("Polish");
       userEvent.click(polishToggle);
 
       expect(
@@ -327,10 +330,7 @@ describe("Sing Up Page", () => {
 
     it("displays all text in English after changing back from Polish", () => {
       setup();
-
-      const polishToggle = screen.getByTitle("Polish");
       userEvent.click(polishToggle);
-      const englishToggle = screen.getByTitle("English");
       userEvent.click(englishToggle);
 
       expect(
@@ -343,6 +343,18 @@ describe("Sing Up Page", () => {
       expect(screen.getByLabelText(en.email)).toBeInTheDocument();
       expect(screen.getByLabelText(en.password)).toBeInTheDocument();
       expect(screen.getByLabelText(en.passwordRepeat)).toBeInTheDocument();
+    });
+
+    it("displays password mismatch validation in Polish", () => {
+      setup();
+      userEvent.click(polishToggle);
+
+      const passwordInput = screen.getByLabelText(pl.password);
+      userEvent.type(passwordInput, "P4ss");
+      const validationMessageInPolish = screen.queryByText(
+        pl.passwordMismatchValidation
+      );
+      expect(validationMessageInPolish).toBeInTheDocument();
     });
   });
 });
