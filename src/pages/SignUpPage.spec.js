@@ -1,4 +1,5 @@
 import {
+  act,
   render,
   screen,
   waitForElementToBeRemoved,
@@ -8,9 +9,10 @@ import userEvent from "@testing-library/user-event";
 import axios from "axios";
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import "../locale/i18n";
+import i18n from "../locale/i18n";
 import en from "../locale/en.json";
 import pl from "../locale/pl.json";
+import LanguageSelector from "../components/LanguageSelector";
 
 describe("Sing Up Page", () => {
   describe("Layout", () => {
@@ -276,9 +278,23 @@ describe("Sing Up Page", () => {
     );
   });
 
-  describe.only("Internationalization", () => {
+  describe("Internationalization", () => {
+    const setup = () => {
+      render(
+        <>
+          <SignUpPage /> <LanguageSelector />
+        </>
+      );
+    };
+
+    afterEach(() => {
+      act(() => {
+        i18n.changeLanguage("en");
+      });
+    });
+
     it("initially displays all text in English", () => {
-      render(<SignUpPage />);
+      setup();
       expect(
         screen.getByRole("heading", { name: en.signUp })
       ).toBeInTheDocument();
@@ -292,7 +308,7 @@ describe("Sing Up Page", () => {
     });
 
     it("displays all text in Polish after changing the language", () => {
-      render(<SignUpPage />);
+      setup();
 
       const polishToggle = screen.getByTitle("Polish");
       userEvent.click(polishToggle);
@@ -310,7 +326,7 @@ describe("Sing Up Page", () => {
     });
 
     it("displays all text in English after changing back from Polish", () => {
-      render(<SignUpPage />);
+      setup();
 
       const polishToggle = screen.getByTitle("Polish");
       userEvent.click(polishToggle);

@@ -1,6 +1,6 @@
 import React from "react";
 import axios from "axios";
-import Input from "../assets/components/Input";
+import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 
 //=== FUNCTIONAL COMPONENT ====
@@ -136,20 +136,6 @@ class SignUpPage extends React.Component {
             Please check your e-mail to activate your account
           </div>
         )}
-        <span
-          className="m-2"
-          title="Polish"
-          onClick={() => this.props.i18n.changeLanguage("pl")}
-        >
-          PL
-        </span>
-        <span
-          className="m-2"
-          title="English"
-          onClick={() => this.props.i18n.changeLanguage("en")}
-        >
-          EN
-        </span>
       </div>
     );
   }
