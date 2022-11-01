@@ -14,6 +14,27 @@ import en from "../locale/en.json";
 import pl from "../locale/pl.json";
 import LanguageSelector from "../components/LanguageSelector";
 
+let requestBody;
+let counter = 0;
+let acceptLanguageHeader;
+const server = setupServer(
+  rest.post("/api/1.0/users", async (req, res, ctx) => {
+    requestBody = await req.json();
+    counter++;
+    acceptLanguageHeader = req.headers.get("Accept-Language");
+    return res(ctx.status(200));
+  })
+);
+
+beforeEach(() => {
+  counter = 0;
+  server.resetHandlers();
+});
+
+beforeAll(() => server.listen());
+
+afterAll(() => server.close());
+
 describe("Sing Up Page", () => {
   describe("Layout", () => {
     beforeEach(() => {
@@ -60,25 +81,6 @@ describe("Sing Up Page", () => {
   });
 
   describe("Interactions", () => {
-    let requestBody;
-    let counter = 0;
-    const server = setupServer(
-      rest.post("/api/1.0/users", async (req, res, ctx) => {
-        requestBody = await req.json();
-        counter++;
-        return res(ctx.status(200));
-      })
-    );
-
-    beforeEach(() => {
-      counter = 0;
-      server.resetHandlers();
-    });
-
-    beforeAll(() => server.listen());
-
-    afterAll(() => server.close());
-
     let button, usernameInput, emailInput, passwordInput, passwordRepeatInput;
 
     const setup = () => {
@@ -279,7 +281,7 @@ describe("Sing Up Page", () => {
   });
 
   describe("Internationalization", () => {
-    let polishToggle, englishToggle;
+    let polishToggle, englishToggle, passwordInput, passwordRepeatInput;
 
     const setup = () => {
       render(
@@ -290,6 +292,8 @@ describe("Sing Up Page", () => {
 
       polishToggle = screen.getByTitle("Polish");
       englishToggle = screen.getByTitle("English");
+      passwordInput = screen.getByLabelText("Password");
+      passwordRepeatInput = screen.getByLabelText("Password Repeat");
     };
 
     afterEach(() => {
@@ -348,13 +352,36 @@ describe("Sing Up Page", () => {
     it("displays password mismatch validation in Polish", () => {
       setup();
       userEvent.click(polishToggle);
-
-      const passwordInput = screen.getByLabelText(pl.password);
       userEvent.type(passwordInput, "P4ss");
       const validationMessageInPolish = screen.queryByText(
         pl.passwordMismatchValidation
       );
       expect(validationMessageInPolish).toBeInTheDocument();
+    });
+
+    it("sends accept language header as en for outgoing request", async () => {
+      setup();
+
+      userEvent.type(passwordInput, "P4ssword");
+      userEvent.type(passwordRepeatInput, "P4ssword");
+      const button = screen.getByRole("button", { name: en.signUp });
+      const form = screen.queryByTestId("form-sign-up");
+      userEvent.click(button);
+      await waitForElementToBeRemoved(form);
+      expect(acceptLanguageHeader).toBe("en");
+    });
+
+    it("sends accept language header as pl for outgoing request after selecting that language", async () => {
+      setup();
+
+      userEvent.type(passwordInput, "P4ssword");
+      userEvent.type(passwordRepeatInput, "P4ssword");
+      const button = screen.getByRole("button", { name: en.signUp });
+      userEvent.click(polishToggle);
+      const form = screen.queryByTestId("form-sign-up");
+      userEvent.click(button);
+      await waitForElementToBeRemoved(form);
+      expect(acceptLanguageHeader).toBe("pl");
     });
   });
 });

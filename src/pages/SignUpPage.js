@@ -53,9 +53,15 @@ class SignUpPage extends React.Component {
     //============= AXIOS ==============
     try {
       this.setState({ apiProgress: true });
-      await axios.post("/api/1.0/users", body).then(() => {
-        this.setState({ signUpSuccess: true });
-      });
+      await axios
+        .post("/api/1.0/users", body, {
+          headers: {
+            "Accept-Language": this.props.i18n.language,
+          },
+        })
+        .then(() => {
+          this.setState({ signUpSuccess: true });
+        });
     } catch (error) {
       if (error.response.status === 400) {
         this.setState({ errors: error.response.data.validationErrors });
