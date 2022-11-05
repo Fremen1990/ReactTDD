@@ -102,5 +102,3 @@ describe("Routing", () => {
 });
 
 console.error = () => {}; // clearing console logs errors
-
-// TODO 39. Dependency List of useEffect
