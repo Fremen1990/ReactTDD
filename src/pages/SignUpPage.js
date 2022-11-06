@@ -1,15 +1,9 @@
 import React from "react";
-import axios from "axios";
 import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 import { signup } from "../api/apiCalls";
-
-//=== FUNCTIONAL COMPONENT ====
-// const SignUpPage = ()=>{
-//     return(
-//         <h1>Sign Up</h1>
-//     )
-// }
+import Alert from "../components/Alert";
+import Spinner from "../components/Spinner";
 
 //==== CLASS COMPONENT =====
 class SignUpPage extends React.Component {
@@ -81,7 +75,7 @@ class SignUpPage extends React.Component {
         data-testid="signup-page"
       >
         {!signUpSuccess && (
-          <form className="card mt-5" data-testid="form-sign-up">
+          <form className="card" data-testid="form-sign-up">
             <div className="card-header">
               <h1 className="text-center">{t("signUp")}</h1>
             </div>
@@ -122,12 +116,7 @@ class SignUpPage extends React.Component {
                   onClick={this.submit}
                   disabled={disabled || apiProgress}
                 >
-                  {apiProgress ? (
-                    <span
-                      className="spinner-border spinner-border-sm"
-                      role="status"
-                    />
-                  ) : null}
+                  {apiProgress && <Spinner />}
                   {t("signUp")}
                 </button>
               </div>
@@ -135,9 +124,7 @@ class SignUpPage extends React.Component {
           </form>
         )}
         {signUpSuccess && (
-          <div className="alert alert-success mt-3">
-            Please check your e-mail to activate your account
-          </div>
+          <Alert>Please check your e-mail to activate your account</Alert>
         )}
       </div>
     );

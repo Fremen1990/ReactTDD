@@ -52,7 +52,7 @@ function App() {
         </div>
       </nav>
 
-      <div className="container">
+      <div className="container pt-3">
         {/*// Old JS routing*/}
         {/*{window.location.pathname === "/" && <HomePage />}*/}
         {/*{window.location.pathname === "/signup" && <SignUpPage />}*/}
