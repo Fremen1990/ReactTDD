@@ -44,5 +44,8 @@
   "devDependencies": {
     "msw": "^0.47.2"
   },
+  "wallaby": {
+    "autoDetect": true
+  },
   "proxy": "http://localhost:8080"
 }

@@ -26,7 +26,10 @@ class UserList extends Component {
         <ul className="list-group list-group-flush">
           {this.state.page.content.map((user) => {
             return (
-              <li className="list-group-item list-group-item-action">
+              <li
+                className="list-group-item list-group-item-action"
+                key={user.id}
+              >
                 {user.username}
               </li>
             );
