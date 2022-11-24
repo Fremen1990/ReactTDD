@@ -13,8 +13,8 @@ export const activate = (token) => {
   return axios.post(`/api/1.0/users/token/${token}`);
 };
 
-export const loadUsers = () => {
+export const loadUsers = (page) => {
   return axios.get("/api/1.0/users", {
-    params: { page: 0, size: 3 },
+    params: { page, size: 3 },
   });
 };
