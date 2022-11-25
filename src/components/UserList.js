@@ -1,6 +1,6 @@
 import { Component } from "react";
 import { loadUsers } from "../api/apiCalls";
-import { withRouter } from "react-router-dom";
+import UserListItem from "./UserListItem";
 
 class UserList extends Component {
   state = {
@@ -34,19 +34,9 @@ class UserList extends Component {
           <h3>Users</h3>
         </div>
         <ul className="list-group list-group-flush">
-          {content.map((user) => {
-            return (
-              <li
-                className="list-group-item list-group-item-action"
-                key={user.id}
-                onClick={() => this.props.history.push(`/user/${user.id}`)}
-                style={{ cursor: "pointer" }}
-              >
-                {/*<Link to={`/user/${user.id}`}>{user.username}</Link>*/}
-                {user.username}
-              </li>
-            );
-          })}
+          {content.map((user) => (
+            <UserListItem user={user} history={this.props.history} />
+          ))}
         </ul>
         <div className="card-footer">
           {page !== 0 && (
@@ -71,4 +61,4 @@ class UserList extends Component {
   }
 }
 
-export default withRouter(UserList);
+export default UserList;
