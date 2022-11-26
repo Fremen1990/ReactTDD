@@ -5,7 +5,7 @@ import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 import { useTranslation } from "react-i18next";
 
-const LoginPage = () => {
+const LoginPage = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [apiProgress, setApiProgress] = useState(false);
@@ -18,7 +18,7 @@ const LoginPage = () => {
     setApiProgress(true);
     try {
       await login({ email, password });
-      setApiProgress(false);
+      history.push("/");
     } catch (error) {
       setFailMessage(error.response.data.message);
     }
@@ -44,7 +44,7 @@ const LoginPage = () => {
           <Input
             id="email"
             label={t("email")}
-            type="password"
+            type="text"
             onChange={(event) => setEmail(event.target.value)}
           />
           <Input

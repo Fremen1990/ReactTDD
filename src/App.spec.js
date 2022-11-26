@@ -37,6 +37,10 @@ const server = setupServer(
         image: null,
       })
     );
+  }),
+
+  rest.post("/api/1.0/auth", (req, res, ctx) => {
+    return res(ctx.status(200), ctx.json({ username: "user5" }));
   })
 );
 beforeEach(() => {
@@ -45,11 +49,12 @@ beforeEach(() => {
 beforeAll(() => server.listen());
 afterAll(() => server.close());
 
+const setup = (path) => {
+  window.history.pushState({}, "", path);
+  render(<App />);
+};
+
 describe("Routing", () => {
-  const setup = (path) => {
-    window.history.pushState({}, "", path);
-    render(<App />);
-  };
   it.each`
     path               | pageTestId
     ${"/"}             | ${"home-page"}
@@ -138,4 +143,14 @@ describe("Routing", () => {
   });
 });
 
+describe("Login", () => {
+  it("redirects to homepage after successful login", async () => {
+    setup("/login");
+    userEvent.type(screen.getByLabelText("E-mail"), "user5@mail.com");
+    userEvent.type(screen.getByLabelText("Password"), "P4ssword");
+    userEvent.click(screen.getByRole("button", { name: "Login" }));
+    const page = await screen.findByTestId("home-page");
+    expect(page).toBeInTheDocument();
+  });
+});
 console.error = () => {}; // clearing console logs errors
