@@ -53,7 +53,7 @@ const LoginPage = () => {
             type="password"
             onChange={(event) => setPassword(event.target.value)}
           />
-          {failMessage && <Alert type="danger">{failMessage}</Alert>}
+          {failMessage && <Alert type="danger">{t("failMessage")}</Alert>}
           <div className="text-center">
             <button
               className="btn btn-primary"

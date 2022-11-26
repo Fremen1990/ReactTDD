@@ -8,5 +8,7 @@
   "users": "Users",
   "nextPage": "next >",
   "previousPage": "< previous",
-  "login": "Login"
+  "login": "Login",
+  "failMessage": "Incorrect credentials"
+
 }

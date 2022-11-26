@@ -8,5 +8,6 @@
   "users": "Użytkownicy",
   "nextPage": "następna >",
   "previousPage": "< poprzednia",
-  "login": "Zaloguj"
+  "login": "Zaloguj",
+  "failMessage": "Błędne dane logowania"
 }
