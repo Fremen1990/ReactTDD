@@ -19,7 +19,8 @@ class UserList extends Component {
   loadData = async (pageIndex) => {
     try {
       const response = await loadUsers(pageIndex);
-      this.setState({ page: response.data });
+      const page = response.data;
+      this.setState({ page: page });
     } catch (err) {
       console.log(err);
     }
@@ -35,7 +36,11 @@ class UserList extends Component {
         </div>
         <ul className="list-group list-group-flush">
           {content.map((user) => (
-            <UserListItem user={user} history={this.props.history} />
+            <UserListItem
+              key={user.id}
+              user={user}
+              history={this.props.history}
+            />
           ))}
         </ul>
         <div className="card-footer">
