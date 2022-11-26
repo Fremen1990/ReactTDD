@@ -3,7 +3,7 @@ import Input from "../components/Input";
 import { withTranslation } from "react-i18next";
 import { signup } from "../api/apiCalls";
 import Alert from "../components/Alert";
-import Spinner from "../components/Spinner";
+import ButtonWithProgress from "../components/ButtonWithProgress";
 
 //==== CLASS COMPONENT =====
 class SignUpPage extends React.Component {
@@ -111,14 +111,22 @@ class SignUpPage extends React.Component {
               />
 
               <div className="text-center">
-                <button
-                  className="btn btn-primary"
+                {/*<button*/}
+                {/*  className="btn btn-primary"*/}
+                {/*  onClick={this.submit}*/}
+                {/*  disabled={disabled || apiProgress}*/}
+                {/*>*/}
+                {/*  {apiProgress && <Spinner />}*/}
+                {/*  {t("signUp")}*/}
+                {/*</button>*/}
+
+                <ButtonWithProgress
+                  apiProgress={apiProgress}
                   onClick={this.submit}
-                  disabled={disabled || apiProgress}
+                  disabled={disabled}
                 >
-                  {apiProgress && <Spinner />}
                   {t("signUp")}
-                </button>
+                </ButtonWithProgress>
               </div>
             </div>
           </form>

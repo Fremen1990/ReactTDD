@@ -1,9 +1,9 @@
 import Input from "../components/Input";
 import React, { useEffect, useState } from "react";
 import { login } from "../api/apiCalls";
-import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
 import { useTranslation } from "react-i18next";
+import ButtonWithProgress from "../components/ButtonWithProgress";
 
 const LoginPage = ({ history }) => {
   const [email, setEmail] = useState("");
@@ -55,14 +55,22 @@ const LoginPage = ({ history }) => {
           />
           {failMessage && <Alert type="danger">{t("failMessage")}</Alert>}
           <div className="text-center">
-            <button
-              className="btn btn-primary"
-              disabled={disabled || apiProgress}
+            {/*<button*/}
+            {/*  className="btn btn-primary"*/}
+            {/*  disabled={disabled || apiProgress}*/}
+            {/*  onClick={submit}*/}
+            {/*>*/}
+            {/*  {apiProgress && <Spinner />}*/}
+            {/*  {t("login")}*/}
+            {/*</button>*/}
+
+            <ButtonWithProgress
+              apiProgress={apiProgress}
               onClick={submit}
+              disabled={disabled}
             >
-              {apiProgress && <Spinner />}
               {t("login")}
-            </button>
+            </ButtonWithProgress>
           </div>
         </div>
       </form>
