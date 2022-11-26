@@ -2,6 +2,7 @@ import { Component } from "react";
 import { loadUsers } from "../api/apiCalls";
 import UserListItem from "./UserListItem";
 import { withTranslation } from "react-i18next";
+import Spinner from "./Spinner";
 
 class UserList extends Component {
   state = {
@@ -11,6 +12,7 @@ class UserList extends Component {
       size: 0,
       totalPages: 0,
     },
+    pendingApiCall: false,
   };
 
   componentDidMount() {
@@ -18,6 +20,7 @@ class UserList extends Component {
   }
 
   loadData = async (pageIndex) => {
+    this.setState({ pendingApiCall: true });
     try {
       const response = await loadUsers(pageIndex);
       const page = response.data;
@@ -25,10 +28,12 @@ class UserList extends Component {
     } catch (err) {
       console.log(err);
     }
+    this.setState({ pendingApiCall: false });
   };
 
   render() {
     const { totalPages, page, content } = this.state.page;
+    const { pendingApiCall } = this.state;
     const { t } = this.props;
 
     return (
@@ -45,23 +50,24 @@ class UserList extends Component {
             />
           ))}
         </ul>
-        <div className="card-footer">
-          {page !== 0 && (
+        <div className="card-footer text-center">
+          {page !== 0 && !pendingApiCall && (
             <button
-              className="btn btn-outline-secondary btn-sm"
+              className="btn btn-outline-secondary btn-sm float-start"
               onClick={() => this.loadData(page - 1)}
             >
               {t("previousPage")}
             </button>
           )}
-          {totalPages > page + 1 && (
+          {totalPages > page + 1 && !pendingApiCall && (
             <button
-              className="btn btn-outline-secondary btn-sm"
+              className="btn btn-outline-secondary btn-sm float-end"
               onClick={() => this.loadData(page + 1)}
             >
               {t("nextPage")}
             </button>
           )}
+          {pendingApiCall && <Spinner />}
         </div>
       </div>
     );
