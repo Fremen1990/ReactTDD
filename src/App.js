@@ -7,9 +7,15 @@ import { useTranslation } from "react-i18next";
 import logo from "./assets/hoaxify.png";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import AccountActivationPage from "./pages/AccountActivationPage";
+import { useState } from "react";
 
 function App() {
   const { t } = useTranslation();
+
+  const [auth, setAuth] = useState({
+    isLoggedIn: false,
+    id: "",
+  });
 
   // const [path, setPath] = useState(window.location.pathname);
 
@@ -34,20 +40,29 @@ function App() {
             Hoaxify
           </Link>
           <ul className="navbar-nav">
-            <Link
-              className="nav-link"
-              to="/signup"
-              // onClick={onClickLink}
-            >
-              {t("signUp")}
-            </Link>
-            <Link
-              className="nav-link"
-              to="/login"
-              // onClick={onClickLink}
-            >
-              Login
-            </Link>
+            {!auth.isLoggedIn && (
+              <>
+                <Link
+                  className="nav-link"
+                  to="/signup"
+                  // onClick={onClickLink}
+                >
+                  {t("signUp")}
+                </Link>
+                <Link
+                  className="nav-link"
+                  to="/login"
+                  // onClick={onClickLink}
+                >
+                  Login
+                </Link>
+              </>
+            )}
+            {auth.isLoggedIn && (
+              <Link className="nav-link" to={`/user/${auth.id}`}>
+                My Profile
+              </Link>
+            )}
           </ul>
         </div>
       </nav>
@@ -65,7 +80,12 @@ function App() {
 
         <Route exact path="/" component={HomePage} />
         <Route path="/signup" component={SignUpPage} />
-        <Route path="/login" component={LoginPage} />
+        <Route
+          path="/login"
+          render={(reactRouterProps) => {
+            return <LoginPage {...reactRouterProps} onLoginSuccess={setAuth} />;
+          }}
+        />
         <Route path="/user/:id" component={UserPage} />
         <Route path="/activate/:token" component={AccountActivationPage} />
 

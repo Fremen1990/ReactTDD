@@ -5,7 +5,7 @@ import Alert from "../components/Alert";
 import { useTranslation } from "react-i18next";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 
-const LoginPage = ({ history }) => {
+const LoginPage = ({ history, onLoginSuccess }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [apiProgress, setApiProgress] = useState(false);
@@ -17,8 +17,13 @@ const LoginPage = ({ history }) => {
     event.preventDefault();
     setApiProgress(true);
     try {
-      await login({ email, password });
+      const response = await login({ email, password });
+      const auth = {
+        isLoggedIn: true,
+        id: response.data.id,
+      };
       history.push("/");
+      onLoginSuccess(auth);
     } catch (error) {
       setFailMessage(error.response.data.message);
     }
