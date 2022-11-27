@@ -1,15 +1,18 @@
 import Input from "../components/Input";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { login } from "../api/apiCalls";
 import Alert from "../components/Alert";
 import { useTranslation } from "react-i18next";
 import ButtonWithProgress from "../components/ButtonWithProgress";
+import { AuthContext } from "../App";
 
-const LoginPage = ({ history, onLoginSuccess }) => {
+const LoginPage = ({ history }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [apiProgress, setApiProgress] = useState(false);
   const [failMessage, setFailMessage] = useState(undefined);
+
+  const auth = useContext(AuthContext);
 
   const { t } = useTranslation();
 
@@ -18,12 +21,11 @@ const LoginPage = ({ history, onLoginSuccess }) => {
     setApiProgress(true);
     try {
       const response = await login({ email, password });
-      const auth = {
+      history.push("/");
+      auth.onLoginSuccess({
         isLoggedIn: true,
         id: response.data.id,
-      };
-      history.push("/");
-      onLoginSuccess(auth);
+      });
     } catch (error) {
       setFailMessage(error.response.data.message);
     }
@@ -60,15 +62,6 @@ const LoginPage = ({ history, onLoginSuccess }) => {
           />
           {failMessage && <Alert type="danger">{t("failMessage")}</Alert>}
           <div className="text-center">
-            {/*<button*/}
-            {/*  className="btn btn-primary"*/}
-            {/*  disabled={disabled || apiProgress}*/}
-            {/*  onClick={submit}*/}
-            {/*>*/}
-            {/*  {apiProgress && <Spinner />}*/}
-            {/*  {t("login")}*/}
-            {/*</button>*/}
-
             <ButtonWithProgress
               apiProgress={apiProgress}
               onClick={submit}

@@ -40,7 +40,7 @@ class UserPage extends Component {
           </Alert>
         );
       } else {
-        content = <ProfileCard user={user} auth={this.props.auth} />;
+        content = <ProfileCard user={user} />;
       }
     }
 

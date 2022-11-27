@@ -111,15 +111,6 @@ class SignUpPage extends React.Component {
               />
 
               <div className="text-center">
-                {/*<button*/}
-                {/*  className="btn btn-primary"*/}
-                {/*  onClick={this.submit}*/}
-                {/*  disabled={disabled || apiProgress}*/}
-                {/*>*/}
-                {/*  {apiProgress && <Spinner />}*/}
-                {/*  {t("signUp")}*/}
-                {/*</button>*/}
-
                 <ButtonWithProgress
                   apiProgress={apiProgress}
                   onClick={this.submit}

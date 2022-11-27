@@ -1,6 +1,6 @@
 import defaultProfileImage from "../assets/profile.png";
 
-function ProfileCard({ user, auth }) {
+function ProfileCard({ user }) {
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -15,7 +15,6 @@ function ProfileCard({ user, auth }) {
       <div className="card-body">
         <h3>{user.username}</h3>
       </div>
-      {auth && user.id === auth.id && <button>Edit</button>}
     </div>
   );
 }
