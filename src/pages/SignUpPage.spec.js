@@ -1,9 +1,4 @@
-import {
-  act,
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+import { act, render, screen, waitForElementToBeRemoved } from "../test/setup";
 import SignUpPage from "./SignUpPage";
 import userEvent from "@testing-library/user-event";
 import axios from "axios";
@@ -12,7 +7,6 @@ import { rest } from "msw";
 import i18n from "../locale/i18n";
 import en from "../locale/en.json";
 import pl from "../locale/pl.json";
-import LanguageSelector from "../components/LanguageSelector";
 
 let requestBody;
 let counter = 0;
@@ -286,7 +280,9 @@ describe("Sing Up Page", () => {
     const setup = () => {
       render(
         <>
-          <SignUpPage /> <LanguageSelector />
+          <SignUpPage />
+          {/*// solved with custom render*/}
+          {/*<LanguageSelector />*/}
         </>
       );
 

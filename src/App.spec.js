@@ -1,4 +1,4 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "./test/setup";
 import App from "./App";
 import userEvent from "@testing-library/user-event";
 
@@ -51,7 +51,14 @@ afterAll(() => server.close());
 
 const setup = (path) => {
   window.history.pushState({}, "", path);
-  render(<App />);
+  render(
+    // solved with custom renderer
+    // <Router>
+    //   <AuthContextWrapper>
+    <App />
+    // </AuthContextWrapper>
+    // </Router>
+  );
 };
 
 describe("Routing", () => {

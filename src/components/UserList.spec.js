@@ -1,13 +1,11 @@
-import { render, screen } from "@testing-library/react";
+import { render, screen } from "../test/setup";
 
 import { setupServer } from "msw/node";
 import { rest } from "msw";
 import UserList from "./UserList";
 import userEvent from "@testing-library/user-event";
-import { BrowserRouter as Router } from "react-router-dom";
 import en from "../locale/en.json";
 import pl from "../locale/pl.json";
-import LanguageSelector from "./LanguageSelector";
 
 const users = [
   {
@@ -90,12 +88,10 @@ beforeAll(() => server.listen());
 afterAll(() => server.close());
 
 const setup = () => {
-  render(
-    <Router>
-      <UserList />
-      <LanguageSelector />
-    </Router>
-  );
+  {
+    /*Solved with custom renderer */
+  }
+  render(<UserList />);
 };
 
 describe("UserList", () => {

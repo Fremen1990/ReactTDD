@@ -1,15 +1,9 @@
-import {
-  act,
-  render,
-  screen,
-  waitForElementToBeRemoved,
-} from "@testing-library/react";
+import { act, render, screen, waitForElementToBeRemoved } from "../test/setup";
 import LoginPage from "./LoginPage";
 import userEvent from "@testing-library/user-event";
 
 import { setupServer } from "msw/node";
 import { rest } from "msw";
-import LanguageSelector from "../components/LanguageSelector";
 import i18n from "../locale/i18n";
 import en from "../locale/en.json";
 import pl from "../locale/pl.json";
@@ -142,7 +136,9 @@ describe("Login Page", () => {
     const setup = () => {
       render(
         <>
-          <LoginPage /> <LanguageSelector />
+          <LoginPage />
+          {/*Solved with custom renderer */}
+          {/*<LanguageSelector />*/}
         </>
       );
 

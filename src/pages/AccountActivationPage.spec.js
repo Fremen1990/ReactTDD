@@ -1,5 +1,5 @@
+import { render, screen } from "../test/setup";
 import AccountActivationPage from "./AccountActivationPage";
-import { render, screen } from "@testing-library/react";
 
 import { setupServer } from "msw/node";
 import { rest } from "msw";
