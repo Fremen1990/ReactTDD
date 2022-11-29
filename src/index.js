@@ -4,6 +4,25 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import "./locale/i18n";
 import { BrowserRouter as Router } from "react-router-dom";
+import { Provider } from "react-redux";
+import { createStore } from "redux";
+import AuthContextWrapper from "./state/AuthContextWrapper";
+
+const reducer = (state, action) => {
+  console.log({ state, action });
+  return state;
+};
+
+const initialState = {
+  isLoggedIn: false,
+  id: "",
+};
+
+const store = createStore(
+  reducer,
+  initialState,
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+);
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -11,7 +30,9 @@ root.render(
 
   <Router>
     <AuthContextWrapper>
-      <App />
+      <Provider store={store}>
+        <App />
+      </Provider>
     </AuthContextWrapper>
   </Router>
 
@@ -22,3 +43,5 @@ root.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 reportWebVitals();
+
+//TODO 69. Use Redux in NavBar  3:00

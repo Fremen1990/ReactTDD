@@ -1,12 +1,13 @@
-import React, { useContext } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/hoaxify.png";
 import { useTranslation } from "react-i18next";
-import { AuthContext } from "../state/AuthContextWrapper";
+import { useSelector } from "react-redux";
 
 function NavBar() {
   const { t } = useTranslation();
-  const auth = useContext(AuthContext);
+  // const auth = useContext(AuthContext);
+  const auth = useSelector((store) => store);
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
@@ -38,3 +39,9 @@ function NavBar() {
 }
 
 export default NavBar;
+
+// ===== Suitable for class components - connecting state without hooks =========
+// const mapStateToProps = (store) => {
+//   return store;
+// };
+// export default connect(mapStateToProps)(NavBar);
