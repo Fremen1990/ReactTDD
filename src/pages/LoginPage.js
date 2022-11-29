@@ -6,8 +6,9 @@ import { useTranslation } from "react-i18next";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { AuthContext } from "../state/AuthContextWrapper";
 import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
-const LoginPage = ({ history }) => {
+const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [apiProgress, setApiProgress] = useState(false);
@@ -16,6 +17,8 @@ const LoginPage = ({ history }) => {
   // const auth = useContext(AuthContext);
 
   const dispatch = useDispatch();
+
+  const history = useHistory();
 
   const { t } = useTranslation();
 
@@ -27,9 +30,7 @@ const LoginPage = ({ history }) => {
       history.push("/");
       dispatch({
         type: "login-success",
-        payload: {
-          id: response.data.id,
-        },
+        payload: { ...response.data, header: `Bearer ${response.data.token}` },
       });
       // auth.onLoginSuccess({
       //   isLoggedIn: true,

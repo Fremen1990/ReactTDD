@@ -205,6 +205,8 @@ describe("Login", () => {
     setupLoggedIn();
     await screen.findByTestId("home-page");
     const state = storage.getItem("auth");
+    console.log("STORED LOCAL FROM TEST", state.isLoggedIn);
+    console.log("STORED LOCAL FROM TEST", typeof state);
     expect(state.isLoggedIn).toBeTruthy();
   });
 

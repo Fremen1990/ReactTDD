@@ -7,16 +7,15 @@ const setItem = (key, value) => {
 };
 
 const getItem = (key) => {
-  return secureLS.get(key);
-  // const storedState = localStorage.getItem(key);
-  // if (!storedState) {
-  //   return null;
-  // }
-  // try {
-  //   return JSON.parse(storedState);
-  // } catch (e) {
-  //   return storedState;
-  // }
+  const storedState = secureLS.get(key);
+  if (!storedState) {
+    return null;
+  }
+  try {
+    return JSON.parse(storedState);
+  } catch (e) {
+    return storedState;
+  }
 };
 
 const clear = () => {
