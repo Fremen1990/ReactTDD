@@ -1,17 +1,22 @@
+import SecureLS from "secure-ls";
+
+const secureLS = new SecureLS();
+
 const setItem = (key, value) => {
-  localStorage.setItem(key, JSON.stringify(value));
+  secureLS.set(key, JSON.stringify(value));
 };
 
 const getItem = (key) => {
-  const storedState = localStorage.getItem(key);
-  if (!storedState) {
-    return null;
-  }
-  try {
-    return JSON.parse(storedState);
-  } catch (e) {
-    return storedState;
-  }
+  return secureLS.get(key);
+  // const storedState = localStorage.getItem(key);
+  // if (!storedState) {
+  //   return null;
+  // }
+  // try {
+  //   return JSON.parse(storedState);
+  // } catch (e) {
+  //   return storedState;
+  // }
 };
 
 const clear = () => {
