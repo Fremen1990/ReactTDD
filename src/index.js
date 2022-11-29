@@ -6,16 +6,22 @@ import "./locale/i18n";
 import { BrowserRouter as Router } from "react-router-dom";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
-import AuthContextWrapper from "./state/AuthContextWrapper";
+// import AuthContextWrapper from "./state/AuthContextWrapper";
 
 const reducer = (state, action) => {
-  console.log({ state, action });
+  if (action.type === "login-success") {
+    const newState = { ...state };
+    newState.id = action.payload.id;
+    newState.isLoggedIn = true;
+    return newState;
+  }
+  // console.log({ state, action });
   return state;
 };
 
 const initialState = {
   isLoggedIn: false,
-  id: "",
+  id: 25,
 };
 
 const store = createStore(
@@ -29,11 +35,12 @@ root.render(
   // <React.StrictMode> // commented to use react-router-dom@5.3.0 for Class and Functional components as a learning path
 
   <Router>
-    <AuthContextWrapper>
-      <Provider store={store}>
-        <App />
-      </Provider>
-    </AuthContextWrapper>
+    {/*<AuthContextWrapper>*/}
+    {/*== REDUX PROVIDER ==*/}
+    <Provider store={store}>
+      <App />
+    </Provider>
+    {/*</AuthContextWrapper>*/}
   </Router>
 
   // </React.StrictMode>

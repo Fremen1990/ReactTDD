@@ -5,6 +5,7 @@ import Alert from "../components/Alert";
 import { useTranslation } from "react-i18next";
 import ButtonWithProgress from "../components/ButtonWithProgress";
 import { AuthContext } from "../state/AuthContextWrapper";
+import { useDispatch } from "react-redux";
 
 const LoginPage = ({ history }) => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,9 @@ const LoginPage = ({ history }) => {
   const [apiProgress, setApiProgress] = useState(false);
   const [failMessage, setFailMessage] = useState(undefined);
 
-  const auth = useContext(AuthContext);
+  // const auth = useContext(AuthContext);
+
+  const dispatch = useDispatch();
 
   const { t } = useTranslation();
 
@@ -22,10 +25,17 @@ const LoginPage = ({ history }) => {
     try {
       const response = await login({ email, password });
       history.push("/");
-      auth.onLoginSuccess({
-        isLoggedIn: true,
-        id: response.data.id,
+      console.log("response data id", response.data.id);
+      dispatch({
+        type: "login-success",
+        payload: {
+          id: response.data.id,
+        },
       });
+      // auth.onLoginSuccess({
+      //   isLoggedIn: true,
+      //   id: response.data.id,
+      // });
     } catch (error) {
       setFailMessage(error.response.data.message);
     }
