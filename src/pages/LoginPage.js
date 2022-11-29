@@ -25,7 +25,6 @@ const LoginPage = ({ history }) => {
     try {
       const response = await login({ email, password });
       history.push("/");
-      console.log("response data id", response.data.id);
       dispatch({
         type: "login-success",
         payload: {
