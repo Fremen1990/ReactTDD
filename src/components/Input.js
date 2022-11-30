@@ -1,4 +1,12 @@
-const Input = ({ id, help, onChange, label, placeholder, type }) => {
+const Input = ({
+  id,
+  help,
+  onChange,
+  label,
+  placeholder,
+  type,
+  initialValue,
+}) => {
   let inputClass = "form-control";
   if (help) {
     inputClass += " is-invalid";
@@ -15,6 +23,7 @@ const Input = ({ id, help, onChange, label, placeholder, type }) => {
         onChange={onChange}
         placeholder={placeholder}
         type={type || "text"}
+        defaultValue={initialValue}
       />
       {help && <span className="invalid-feedback">{help}</span>}
     </div>

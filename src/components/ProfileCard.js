@@ -1,6 +1,42 @@
 import defaultProfileImage from "../assets/profile.png";
+import { useSelector } from "react-redux";
+import { useState } from "react";
+import Input from "./Input";
 
 function ProfileCard({ user }) {
+  const { id } = useSelector((store) => store);
+
+  const [inEditMode, setInEditMode] = useState(false);
+  let content;
+
+  if (inEditMode) {
+    content = (
+      <>
+        <Input
+          label="Change your username"
+          id="username"
+          initialValue={user.username}
+        />
+        <button className="btn btn-primary">Save</button>
+        <button className="btn btn-outline-secondary">Cancel</button>
+      </>
+    );
+  } else {
+    content = (
+      <>
+        <h3>{user.username}</h3>
+        {user.id === id && (
+          <button
+            onClick={() => setInEditMode(true)}
+            className="btn btn-outline-success"
+          >
+            Edit
+          </button>
+        )}
+      </>
+    );
+  }
+
   return (
     <div className="card text-center">
       <div className="card-header">
@@ -12,9 +48,7 @@ function ProfileCard({ user }) {
           className="rounded-circle shadow"
         />
       </div>
-      <div className="card-body">
-        <h3>{user.username}</h3>
-      </div>
+      <div className="card-body">{content}</div>
     </div>
   );
 }
