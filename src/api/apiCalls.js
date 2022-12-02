@@ -45,3 +45,11 @@ export const login = (body) => {
     // }
   );
 };
+
+export const updateUser = (id, body, header) => {
+  return axios.put(`/api/1.0/users/${id}`, body, {
+    headers: {
+      Authorization: header,
+    },
+  });
+};
