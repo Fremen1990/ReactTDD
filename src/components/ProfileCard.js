@@ -6,6 +6,7 @@ import { deleteUser, updateUser } from "../api/apiCalls";
 import ButtonWithProgress from "./ButtonWithProgress";
 import { Modal } from "./Modal";
 import { useHistory } from "react-router-dom";
+import { logoutSuccess, updateSuccess } from "../state/authActions";
 
 function ProfileCard({ user }) {
   const dispatch = useDispatch();
@@ -35,10 +36,11 @@ function ProfileCard({ user }) {
         // , header
       );
       setInEditMode(false);
-      dispatch({
-        type: "user-update-success",
-        payload: { username: newUsername },
-      });
+      dispatch(
+        updateSuccess({
+          username: newUsername,
+        })
+      );
     } catch (error) {}
     setUpdateApiProgress(false);
   };
@@ -53,7 +55,7 @@ function ProfileCard({ user }) {
     try {
       await deleteUser(user.id);
       history.push("/");
-      dispatch({ type: "logout-success" });
+      dispatch(logoutSuccess());
     } catch (e) {}
     setDeleteApiProgress(false);
   };

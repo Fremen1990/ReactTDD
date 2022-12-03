@@ -4,6 +4,7 @@ import logo from "../assets/hoaxify.png";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../api/apiCalls";
+import { logoutSuccess } from "../state/authActions";
 
 function NavBar() {
   const { t } = useTranslation();
@@ -16,7 +17,7 @@ function NavBar() {
     try {
       await logout();
     } catch (err) {}
-    dispatch({ type: "logout-success" });
+    dispatch(logoutSuccess());
   };
 
   return (

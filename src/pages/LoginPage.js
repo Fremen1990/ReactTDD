@@ -7,6 +7,7 @@ import ButtonWithProgress from "../components/ButtonWithProgress";
 import { AuthContext } from "../state/AuthContextWrapper";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+import { loginSuccess } from "../state/authActions";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -28,10 +29,13 @@ const LoginPage = () => {
     try {
       const response = await login({ email, password });
       history.push("/");
-      dispatch({
-        type: "login-success",
-        payload: { ...response.data, header: `Bearer ${response.data.token}` },
-      });
+
+      dispatch(
+        loginSuccess({
+          ...response.data,
+          header: `Bearer ${response.data.token}`,
+        })
+      );
       // auth.onLoginSuccess({
       //   isLoggedIn: true,
       //   id: response.data.id,
