@@ -1,27 +1,37 @@
 import defaultProfileImage from "../assets/profile.png";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Input from "./Input";
 import { updateUser } from "../api/apiCalls";
 import ButtonWithProgress from "./ButtonWithProgress";
 
 function ProfileCard({ user }) {
+  const dispatch = useDispatch();
+  const { id, username, header } = useSelector((store) => ({
+    id: store.id,
+    username: store.username,
+    header: store.header,
+  }));
   const [inEditMode, setInEditMode] = useState(false);
   const [apiProgress, setApiProgress] = useState(false);
   const [newUsername, setNewUsername] = useState(user.username);
-
-  const { id, header } = useSelector((store) => ({
-    id: store.id,
-    header: store.header,
-  }));
 
   const onClickSave = async () => {
     setApiProgress(true);
     try {
       await updateUser(id, { username: newUsername }, header);
       setInEditMode(false);
+      dispatch({
+        type: "user-update-success",
+        payload: { username: newUsername },
+      });
     } catch (error) {}
     setApiProgress(false);
+  };
+
+  const onClickCancel = () => {
+    setInEditMode(false);
+    setNewUsername(username);
   };
 
   let content;
@@ -41,7 +51,9 @@ function ProfileCard({ user }) {
         >
           Save
         </ButtonWithProgress>
-        <button className="btn btn-outline-secondary">Cancel</button>
+        <button className="btn btn-outline-secondary" onClick={onClickCancel}>
+          Cancel
+        </button>
       </>
     );
   } else {

@@ -173,4 +173,35 @@ describe("Profile Card", () => {
     editInput = screen.getByLabelText("Change your username");
     expect(editInput).toHaveValue("new-username");
   });
+
+  it("hides edit layout after clicking cancel", async () => {
+    setupInEditMode();
+    userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    const editButton = await screen.findByRole("button", { name: "Edit" });
+    expect(editButton).toBeInTheDocument();
+  });
+
+  it("displays the original username after username is changed in edit mode but cancelled", () => {
+    setupInEditMode();
+    let editInput = screen.getByLabelText("Change your username");
+    userEvent.clear(editInput);
+    userEvent.type(editInput, "new-username");
+    userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    const header = screen.getByRole("heading", { name: "user5" });
+    expect(header).toBeInTheDocument();
+  });
+
+  //todo 79. Cancel Update  6:00
+  it.skip("displays last updated name after clicking cancel in second edit", async () => {
+    setupInEditMode();
+    let editInput = screen.getByLabelText("Change your username");
+    userEvent.clear(editInput);
+    userEvent.type(editInput, "new-username");
+    userEvent.click(saveButton);
+    const editButton = await screen.findByRole("button", { name: "Edit" });
+    userEvent.click(editButton);
+    userEvent.click(screen.getByRole("button", { name: "Cancel" }));
+    const header = screen.getByRole("heading", { name: "new-username " });
+    expect(header).toBeInTheDocument();
+  });
 });

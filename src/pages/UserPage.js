@@ -3,6 +3,8 @@ import { getUserById } from "../api/apiCalls";
 import ProfileCard from "../components/ProfileCard";
 import Spinner from "../components/Spinner";
 import Alert from "../components/Alert";
+import async from "async";
+import { response } from "msw";
 
 class UserPage extends Component {
   state = {
@@ -10,8 +12,23 @@ class UserPage extends Component {
     pendingApiCall: false,
     failResponse: undefined,
   };
+  componentDidMount() {
+    this.loadUser();
+  }
 
-  async componentDidMount() {
+  // todo 80. Fix - Reload User After Navigation
+  // async componentDidUpdate(previousProps, previousState) {
+  //   this.setState({ pendingApiCall: true });
+  //   try {
+  //     const response = await getUserById(this.props.match.params.id);
+  //     this.setState({ user: response.data });
+  //   } catch (error) {
+  //     this.setState({ failResponse: error.response.data.message });
+  //   }
+  //   this.setState({ pendingApiCall: false });
+  // }
+
+  loadUser = async () => {
     this.setState({ pendingApiCall: true });
     try {
       const response = await getUserById(this.props.match.params.id);
@@ -19,9 +36,8 @@ class UserPage extends Component {
     } catch (error) {
       this.setState({ failResponse: error.response.data.message });
     }
-
     this.setState({ pendingApiCall: false });
-  }
+  };
 
   render() {
     const { user, pendingApiCall, failResponse } = this.state;
