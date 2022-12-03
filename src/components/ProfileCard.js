@@ -7,8 +7,10 @@ import ButtonWithProgress from "./ButtonWithProgress";
 
 function ProfileCard({ user }) {
   const dispatch = useDispatch();
-  const { id, username,
-      // header
+  const {
+    id,
+    username,
+    // header
   } = useSelector((store) => ({
     id: store.id,
     username: store.username,
@@ -21,8 +23,10 @@ function ProfileCard({ user }) {
   const onClickSave = async () => {
     setApiProgress(true);
     try {
-      await updateUser(id, { username: newUsername }
-          // , header
+      await updateUser(
+        id,
+        { username: newUsername }
+        // , header
       );
       setInEditMode(false);
       dispatch({
@@ -65,12 +69,24 @@ function ProfileCard({ user }) {
       <>
         <h3>{newUsername}</h3>
         {user.id === id && (
-          <button
-            onClick={() => setInEditMode(true)}
-            className="btn btn-outline-success"
-          >
-            Edit
-          </button>
+          <>
+            <div>
+              <button
+                onClick={() => setInEditMode(true)}
+                className="btn btn-outline-success"
+              >
+                Edit
+              </button>
+            </div>
+            <div className="pt-2">
+              <button
+                onClick={() => setInEditMode(true)}
+                className="btn btn-danger"
+              >
+                Delete My Account
+              </button>
+            </div>
+          </>
         )}
       </>
     );
