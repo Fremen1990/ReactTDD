@@ -5,6 +5,7 @@ import Input from "./Input";
 import { deleteUser, updateUser } from "../api/apiCalls";
 import ButtonWithProgress from "./ButtonWithProgress";
 import { Modal } from "./Modal";
+import { useHistory } from "react-router-dom";
 
 function ProfileCard({ user }) {
   const dispatch = useDispatch();
@@ -22,6 +23,8 @@ function ProfileCard({ user }) {
   const [updateApiProgress, setUpdateApiProgress] = useState(false);
   const [newUsername, setNewUsername] = useState(user.username);
   const [modalVisible, setModalVisible] = useState(false);
+
+  const history = useHistory();
 
   const onClickSave = async () => {
     setUpdateApiProgress(true);
@@ -49,6 +52,8 @@ function ProfileCard({ user }) {
     setDeleteApiProgress(true);
     try {
       await deleteUser(user.id);
+      history.push("/");
+      dispatch({ type: "logout-success" });
     } catch (e) {}
     setDeleteApiProgress(false);
   };
