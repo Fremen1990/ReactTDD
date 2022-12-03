@@ -19,6 +19,7 @@ function ProfileCard({ user }) {
     setApiProgress(true);
     try {
       await updateUser(id, { username: newUsername }, header);
+      setInEditMode(false);
     } catch (error) {}
     setApiProgress(false);
   };
@@ -30,7 +31,7 @@ function ProfileCard({ user }) {
         <Input
           label="Change your username"
           id="username"
-          initialValue={user.username}
+          initialValue={newUsername}
           onChange={({ target }) => setNewUsername(target.value)}
         />
         <ButtonWithProgress
@@ -46,7 +47,7 @@ function ProfileCard({ user }) {
   } else {
     content = (
       <>
-        <h3>{user.username}</h3>
+        <h3>{newUsername}</h3>
         {user.id === id && (
           <button
             onClick={() => setInEditMode(true)}
