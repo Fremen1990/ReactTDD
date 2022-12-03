@@ -7,10 +7,12 @@ import ButtonWithProgress from "./ButtonWithProgress";
 
 function ProfileCard({ user }) {
   const dispatch = useDispatch();
-  const { id, username, header } = useSelector((store) => ({
+  const { id, username,
+      // header
+  } = useSelector((store) => ({
     id: store.id,
     username: store.username,
-    header: store.header,
+    // header: store.header, solved with Axios Interceptors
   }));
   const [inEditMode, setInEditMode] = useState(false);
   const [apiProgress, setApiProgress] = useState(false);
@@ -19,7 +21,9 @@ function ProfileCard({ user }) {
   const onClickSave = async () => {
     setApiProgress(true);
     try {
-      await updateUser(id, { username: newUsername }, header);
+      await updateUser(id, { username: newUsername }
+          // , header
+      );
       setInEditMode(false);
       dispatch({
         type: "user-update-success",

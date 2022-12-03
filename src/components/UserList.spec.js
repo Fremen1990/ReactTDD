@@ -6,6 +6,7 @@ import UserList from "./UserList";
 import userEvent from "@testing-library/user-event";
 import en from "../locale/en.json";
 import pl from "../locale/pl.json";
+import storage from "../state/storage";
 
 const users = [
   {
@@ -65,8 +66,10 @@ const getPage = (page, size) => {
   };
 };
 
+let header;
 const server = setupServer(
   rest.get("/api/1.0/users", async (req, res, ctx) => {
+    header = req.headers.get("Authorization");
     let page = Number.parseInt(req.url.searchParams.get("page"));
     let size = Number.parseInt(req.url.searchParams.get("size"));
     if (Number.isNaN(page)) {
@@ -158,6 +161,17 @@ describe("UserList", () => {
       const spinner = await screen.getByRole("status");
       await screen.findByText("user1");
       expect(spinner).not.toBeInTheDocument();
+    });
+
+    it("sends request with authorization header", async () => {
+      storage.setItem("auth", {
+        id: 5,
+        username: "user5",
+        header: "auth header value",
+      });
+      setup();
+      await screen.findByText("user1");
+      expect(header).toBe("auth header value");
     });
   });
 
