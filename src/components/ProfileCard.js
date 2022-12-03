@@ -2,8 +2,9 @@ import defaultProfileImage from "../assets/profile.png";
 import { useDispatch, useSelector } from "react-redux";
 import { useState } from "react";
 import Input from "./Input";
-import { updateUser } from "../api/apiCalls";
+import { deleteUser, updateUser } from "../api/apiCalls";
 import ButtonWithProgress from "./ButtonWithProgress";
+import { Modal } from "./Modal";
 
 function ProfileCard({ user }) {
   const dispatch = useDispatch();
@@ -17,11 +18,13 @@ function ProfileCard({ user }) {
     // header: store.header, solved with Axios Interceptors
   }));
   const [inEditMode, setInEditMode] = useState(false);
-  const [apiProgress, setApiProgress] = useState(false);
+  const [deleteApiProgress, setDeleteApiProgress] = useState(false);
+  const [updateApiProgress, setUpdateApiProgress] = useState(false);
   const [newUsername, setNewUsername] = useState(user.username);
+  const [modalVisible, setModalVisible] = useState(false);
 
   const onClickSave = async () => {
-    setApiProgress(true);
+    setUpdateApiProgress(true);
     try {
       await updateUser(
         id,
@@ -34,12 +37,20 @@ function ProfileCard({ user }) {
         payload: { username: newUsername },
       });
     } catch (error) {}
-    setApiProgress(false);
+    setUpdateApiProgress(false);
   };
 
   const onClickCancel = () => {
     setInEditMode(false);
     setNewUsername(username);
+  };
+
+  const onClickDelete = async () => {
+    setDeleteApiProgress(true);
+    try {
+      await deleteUser(user.id);
+    } catch (e) {}
+    setDeleteApiProgress(false);
   };
 
   let content;
@@ -55,7 +66,7 @@ function ProfileCard({ user }) {
         <ButtonWithProgress
           className="btn btn-primary"
           onClick={onClickSave}
-          apiProgress={apiProgress}
+          apiProgress={updateApiProgress}
         >
           Save
         </ButtonWithProgress>
@@ -80,8 +91,10 @@ function ProfileCard({ user }) {
             </div>
             <div className="pt-2">
               <button
-                onClick={() => setInEditMode(true)}
                 className="btn btn-danger"
+                data-toggle="modal"
+                data-target="#exampleModal"
+                onClick={() => setModalVisible(true)}
               >
                 Delete My Account
               </button>
@@ -93,18 +106,32 @@ function ProfileCard({ user }) {
   }
 
   return (
-    <div className="card text-center">
-      <div className="card-header">
-        <img
-          src={defaultProfileImage}
-          alt="profile"
-          width="200"
-          height="200"
-          className="rounded-circle shadow"
-        />
+    <>
+      <div className="card text-center">
+        <div className="card-header">
+          <img
+            src={defaultProfileImage}
+            alt="profile"
+            width="200"
+            height="200"
+            className="rounded-circle shadow"
+          />
+        </div>
+        <div className="card-body">{content}</div>
+        {modalVisible && (
+          <Modal
+            content="Are you sure to delete your account"
+            onClickCancel={() => setModalVisible(false)}
+            onClickConfirm={onClickDelete}
+            apiProgress={deleteApiProgress}
+          />
+        )}
+        {/*<Modal*/}
+        {/*  content="Are you sure to delete your account"*/}
+        {/*  onClickCancel={() => setModalVisible(false)}*/}
+        {/*/>*/}
       </div>
-      <div className="card-body">{content}</div>
-    </div>
+    </>
   );
 }
 
