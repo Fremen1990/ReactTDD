@@ -2,12 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 import logo from "../assets/hoaxify.png";
 import { useTranslation } from "react-i18next";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../api/apiCalls";
 
 function NavBar() {
   const { t } = useTranslation();
   // const auth = useContext(AuthContext);
   const auth = useSelector((store) => store);
+  const dispatch = useDispatch();
+
+  const onClickLogout = async (event) => {
+    event.preventDefault();
+    try {
+      await logout();
+    } catch (err) {}
+    dispatch({ type: "logout-success" });
+  };
 
   return (
     <nav className="navbar navbar-expand navbar-light bg-light shadow-sm">
@@ -28,9 +38,14 @@ function NavBar() {
             </>
           )}
           {auth.isLoggedIn && (
-            <Link className="nav-link" to={`/user/${auth.id}`}>
-              My Profile
-            </Link>
+            <>
+              <Link className="nav-link" to={`/user/${auth.id}`}>
+                My Profile
+              </Link>
+              <a href="/" className="nav-link" onClick={onClickLogout}>
+                Logout
+              </a>
+            </>
           )}
         </ul>
       </div>

@@ -5,6 +5,14 @@ import { store } from "../state/store";
 axios.interceptors.request.use((request) => {
   request.headers["Accept-Language"] = i18n.language;
   request.headers["Authorization"] = store.getState().header;
+
+  //todo 82. Logout
+
+  // const { header } = store.getState;
+  // if (header) {
+  //   request.headers["Authorization"] = store.getState().header;
+  // }
+
   return request;
 });
 
@@ -48,8 +56,10 @@ export const login = (body) => {
   );
 };
 
-export const updateUser = (id, body,
-                           // header
+export const updateUser = (
+  id,
+  body
+  // header
 ) => {
   return axios.put(
     `/api/1.0/users/${id}`,
@@ -61,4 +71,8 @@ export const updateUser = (id, body,
     //   },
     // }
   );
+};
+
+export const logout = () => {
+  return axios.post("/api/1.0/logout");
 };

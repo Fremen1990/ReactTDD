@@ -3,6 +3,12 @@ const reducer = (state, action) => {
     return { ...state, ...action.payload, isLoggedIn: true };
   } else if (action.type === "user-update-success") {
     return { ...state, username: action.payload.username };
+  } else if (action.type === "logout-success") {
+    return {
+      isLoggedIn: false,
+      username: "",
+      token: "",
+    };
   }
   return state;
 };
